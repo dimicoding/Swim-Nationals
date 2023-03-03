@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from pprint import pprint
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -48,21 +49,34 @@ def get_athlete_info():
             else:
                 raise ValueError
         except ValueError:
-                print("Invalid birth year, enter a valid year")  
+            print("Invalid birth year, enter a valid year")  
     
     while True:
-        #get users gender and validate it
+        '#get users gender and validate it'
         try:
             gender = input("Please enter your gender (M/F):\n")
             if gender.lower() not in ['m', 'f']:
                 raise ValueError
             print("Recieving...")
-            print(f'Verify if everythin is correct: name:"{name}"year:"{year}"gender:"{gender}')
+            print(f'Verify if everything is correct:\
+                   "name:"{name}" year: "{year}" gender: "{gender} ')
 
             break
         except ValueError:
             print("Invalid gender. Please enter 'M' or 'F'.")
-    
 
 
-get_athlete_info()
+
+class Events:
+    def __init__(self):
+        events = {
+                50:["Free", "Fly", "Back", "Breast"],
+                100:["Free", "Fly", "Back", "Breast"],
+                200:["Free", "Fly", "Back", "Breast", "IM"],
+                400:["Free", "IM"],
+                800:["Free"],
+                1500:["Free"],
+                }
+        self.events_dict = events
+        pprint(events)
+Events()
