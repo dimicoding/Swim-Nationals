@@ -66,17 +66,120 @@ def get_athlete_info():
             print("Invalid gender. Please enter 'M' or 'F'.")
 
 
+def Events():
+    """
+    Just prints the distances and srokes to the user in a ordered way.
+    """
+    events = {
+        50:["Free", "Fly", "Back", "Breast"],
+        100:["Free", "Fly", "Back", "Breast"],
+        200:["Free", "Fly", "Back", "Breast", "IM"],
+        400:["Free", "IM"],
+        800:["Free"],
+        1500:["Free"],
+        }
 
-class Events:
-    def __init__(self):
-        events = {
-                50:["Free", "Fly", "Back", "Breast"],
-                100:["Free", "Fly", "Back", "Breast"],
-                200:["Free", "Fly", "Back", "Breast", "IM"],
-                400:["Free", "IM"],
-                800:["Free"],
-                1500:["Free"],
-                }
-        self.events_dict = events
-        pprint(events)
-Events()
+    pprint(events)
+
+
+def get_quali_time():
+    """
+    define lists for stroke, distance and gender
+    iterate trought each of them and get a time stored in a specified cell
+    """
+    worksheet = sh.worksheet('Events')
+    
+    #access columns in the sheet
+    strokes= worksheet.col_values(1)
+    distances= worksheet.col_values(2)
+    m_times= worksheet.col_values(3)
+    f_times= worksheet.col_values(4)
+    print("")
+    user_stroke= input("pick a stroke:")
+    user_distance=input("pick a distance:")
+    user_gender= input("M or F:")
+
+    row_index = -1
+    for i in range(len(strokes)):
+        if strokes[i] == user_stroke and distances[i] == user_distance:
+            row_index = i
+            if user_gender == "M":
+                time = m_times[i]
+            else:
+                time = f_times[i]
+            break
+    
+    # access the cell containing the time and print its value
+    if row_index >= 0:
+        cell = worksheet.cell(row_index + 1, 3 if user_gender == "M" else 4)
+        time = cell.value
+        print(f"The qualifying time for {user_stroke} {user_distance} ({user_gender}) is {time}.")
+    else:
+        print("Error: combination of stroke, distance, and gender not found.")
+
+
+
+
+
+
+def main():
+    personal_info= get_athlete_info()
+    races= Events()
+    times= get_quali_time()
+
+
+
+""""
+for user_stroke in strokes:
+        for user_distances in distances:
+            for user_gender in m_times:
+                time = worksheet.cell().value
+                print(time)
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+print("Finally let's choose a race")
+distance= input("Select your distance:\n")
+stroke= input("Select your stroke:\n")
+self.selected_races=[]
+
+def choose_races(self, races):
+    if races in self.events_dict:
+        self.selected_races.append(races)
+    else:
+        print("Race not Valid")
+
+
+records_data = sh.worksheet("Events").get_all_records()
+pprint(records_data)
+
+def pick_races():
+
+    #- Create a loop which will allow the user to pick the races
+    #- The choices should be printed out to the excel file
+
+    while True:
+        input()
+    
+
+worksheet = sh.worksheet('Events')
+value= worksheet.acell('C2').value
+print(value)
+"""
