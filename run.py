@@ -29,7 +29,7 @@ def get_athlete_info():
         print("Your name should contain between 3 and 9 letters.")
         print("Example: MichaelP\n")
         
-        name= input("Enter your name here:\n")
+        name = input("Enter your name here:\n")
         if name.isalpha() and len(name) > 2 and len(name) < 10:
             print("Hi! " + name + " what is the year you were born?")
             break
@@ -41,9 +41,9 @@ def get_athlete_info():
         try:
             print("Type only the two last numbers.")
             print("Example: 00\n")
-            year= input("Your year:\n")
-            if year.isdigit() and len(year) ==2:
-                year= int(year)
+            year = input("Your year:\n")
+            if year.isdigit() and len(year) == 2:
+                year = int(year)
                 print("Year valid.")
                 break
             else:
@@ -51,19 +51,6 @@ def get_athlete_info():
         except ValueError:
             print("Invalid birth year, enter a valid year")  
     
-    while True:
-        '#get users gender and validate it'
-        try:
-            gender = input("Please enter your gender (M/F):\n")
-            if gender.lower() not in ['m', 'f']:
-                raise ValueError
-            print("Recieving...")
-            print(f'Verify if everything is correct:\
-                   "name:"{name}" year: "{year}" gender: "{gender} ')
-
-            break
-        except ValueError:
-            print("Invalid gender. Please enter 'M' or 'F'.")
 
 
 def Events():
@@ -71,12 +58,12 @@ def Events():
     Just prints the distances and srokes to the user in a ordered way.
     """
     events = {
-        50:["Free", "Fly", "Back", "Breast"],
-        100:["Free", "Fly", "Back", "Breast"],
-        200:["Free", "Fly", "Back", "Breast", "IM"],
-        400:["Free", "IM"],
-        800:["Free"],
-        1500:["Free"],
+        50:["free", "fly", "back", "breast"],
+        100:["free", "fly", "back", "breast"],
+        200:["free", "fly", "back", "breast", "medley"],
+        400:["free", "medley"],
+        800:["free"],
+        1500:["free"],
         }
 
     pprint(events)
@@ -90,34 +77,66 @@ def get_quali_time():
     worksheet = sh.worksheet('Events')
     
     #access columns in the sheet
-    strokes= worksheet.col_values(1)
-    distances= worksheet.col_values(2)
-    m_times= worksheet.col_values(3)
-    f_times= worksheet.col_values(4)
+    strokes = worksheet.col_values(1)
+    distances = worksheet.col_values(2)
+    m_times = worksheet.col_values(3)
+    f_times = worksheet.col_values(4)
     print("")
-    user_stroke= input("pick a stroke:")
-    user_distance=input("pick a distance:")
-    user_gender= input("M or F:")
 
+    print("Which stroke you want to swim, for example:'medley'")
+    user_stroke = input("Insert your stroke here:  \n")
+    
+
+    while True:
+        #get users distance and validate it
+        print("Distance of your stroke, must be a number for example:'200'")
+        try:
+            user_distance = input("Insert your distance here:  \n")
+            if user_distance.isdigit() and len(user_distance)<5:
+                print("Distance is valid!")
+            else:
+                raise ValueError
+            break
+        except ValueError:
+            print("Error: enter a number from 50 to 1500.")
+
+    while True:
+        #get users gender and validate it
+        print("Select the gender you're competing in, for example 'M' or 'F'")
+        try:
+            user_gender = input("Insert your gender here:  \n")
+            if user_gender.upper() in ("M", "F"):
+                print("Recieving...")
+            else:
+                raise ValueError
+            break
+        except ValueError:
+            print("Error: Invalid gender.")
+
+  
+
+    #iterate torught strokes/distances
     row_index = -1
     for i in range(len(strokes)):
         if strokes[i] == user_stroke and distances[i] == user_distance:
             row_index = i
-            if user_gender == "M":
+            if user_gender.upper() == "M":
                 time = m_times[i]
             else:
                 time = f_times[i]
             break
-    
-    # access the cell containing the time and print its value
+        
+        # access the cell containing the time and print its value
     if row_index >= 0:
-        cell = worksheet.cell(row_index + 1, 3 if user_gender == "M" else 4)
+        cell = worksheet.cell(row_index + 1, 3 if user_gender.upper() == "M" else 4)
         time = cell.value
-        print(f"The qualifying time for {user_stroke} {user_distance} ({user_gender}) is {time}.")
+        print(f"The qualifying time for {user_distance}m")
+        print(f"{user_stroke}, gender ({user_gender}) is {time}s.") 
+
     else:
-        print("Error: combination of stroke, distance, and gender not found.")
+        print("Error: Your stroke must be incorrect...")
 
-
+get_quali_time()
 
 
 
