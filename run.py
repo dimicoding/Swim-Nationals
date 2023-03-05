@@ -13,19 +13,24 @@ GSPREAD_CLIENT= gspread.authorize(SCOPED_CREDS)
 sh= GSPREAD_CLIENT.open('Swim_Nationals')
 
 
-def get_athlete_info():
-    """
+
+"""
     get users name, age and gender.
     Run a while loop to collect valid data.
     Name, must be between 2 and 10letters.
     Age, last two numbers of birth the birth year.
     Gender, either "m" or "f" letter.
     """
-    print("Before you choose your races, I need some details...")
-    print("Your Name, and Year of birth.\n")
+print("Before you choose your races, I need some details...")
+print("Your Name, and Year of birth.\n")
 
+def users_name():
+    """
+    get the name from the input
+    """
+    global name
     while True:
-        #get users name and validate it
+    #get users name and validate it
         print("Your name should contain between 3 and 9 letters.")
         print("Example: MichaelP\n")
         
@@ -35,9 +40,15 @@ def get_athlete_info():
             break
         else:
             print("Invalid name! Please enter a valid name.")
-            
+    return name
+    
+def users_year():
+    """
+    get the birth year from the input
+    """
+    global year
     while True:
-        #get users birth year and validate it
+    #get users birth year and validate it
         try:
             print("Type only the two last numbers.")
             print("Example: 00\n")
@@ -50,7 +61,7 @@ def get_athlete_info():
                 raise ValueError
         except ValueError:
             print("Invalid birth year, enter a valid year")  
-    
+    return year
 
 
 def Events():
@@ -92,7 +103,7 @@ def get_quali_time():
         print("Distance of your stroke, must be a number for example:'200'")
         try:
             user_distance = input("Insert your distance here:  \n")
-            if user_distance.isdigit() and len(user_distance)<5:
+            if user_distance.isdigit() and len(user_distance) < 5:
                 print("Distance is valid!")
             else:
                 raise ValueError
@@ -104,8 +115,8 @@ def get_quali_time():
         #get users gender and validate it
         print("Select the gender you're competing in, for example 'M' or 'F'")
         try:
-            user_gender = input("Insert your gender here:  \n")
-            if user_gender.upper() in ("M", "F"):
+            gender = input("Insert your gender here:  \n")
+            if gender.upper() in ("M", "F"):
                 print("Recieving...\n")
             else:
                 raise ValueError
@@ -120,7 +131,7 @@ def get_quali_time():
         for i in range(len(strokes)):
             if strokes[i] == user_stroke and distances[i] == user_distance:
                 row_index = i
-                if user_gender.upper() == "M":
+                if gender.upper() == "M":
                     time = m_times[i]
                 else:
                     time = f_times[i]
@@ -128,10 +139,10 @@ def get_quali_time():
             
             # access the cell containing the time and print its value
         if row_index >= 0:
-            cell = worksheet.cell(row_index + 1, 3 if user_gender.upper() == "M" else 4)
+            cell = worksheet.cell(row_index + 1, 3 if gender.upper() == "M" else 4)
             time = cell.value
-            print(f"The qualifying time for {user_distance}m")
-            print(f"{user_stroke}, gender ({user_gender}) is {time}s.") 
+            print(f"To qualify for {user_distance}m {user_stroke} ({gender})")
+            print(f"you need to swim faster than {time}s.\n")
             break
 
         else:
@@ -152,7 +163,6 @@ def whats_next():
             repeat = input("Type: 'Y' or 'N':  \n")
             if repeat.upper() == "Y":
                 print("redirecting...")
-                return get_quali_time()
                 break
             elif repeat.upper() == "N":
                 print("Plasure, see you next time)")
@@ -162,14 +172,32 @@ def whats_next():
         except ValueError as e:
             print(e)
 
+def append_to_sheet(name, year):
+    """
+    Print the users stroke to the sheet
+    """
+    worksheet = sh.worksheet('Athlete')
+    row = [name, year]
+    worksheet.append_row(row)
+
+
 
 
 
 def main():
-    personal_info= get_athlete_info()
-    races= Events()
-    times= get_quali_time()
-    whats_next()
+    global name
+    global year
+    while True:
+        users_name()
+        users_year()
+        races= Events()
+        times = get_quali_time()
+        whats_next()
+        append_to_sheet(name,year)
+        repeat = input("Do you want to continue? (Y/N)")
+        if repeat.upper() == "N":
+            print("Exiting program...")
+            break
 main()
 
 
