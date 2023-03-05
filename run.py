@@ -106,7 +106,7 @@ def get_quali_time():
         try:
             user_gender = input("Insert your gender here:  \n")
             if user_gender.upper() in ("M", "F"):
-                print("Recieving...")
+                print("Recieving...\n")
             else:
                 raise ValueError
             break
@@ -134,11 +134,32 @@ def get_quali_time():
         print(f"{user_stroke}, gender ({user_gender}) is {time}s.") 
 
     else:
-        print("Error: Your stroke must be incorrect...")
-
-get_quali_time()
+        print("Error: Combination of stroke and distance is not valid...")
 
 
+def whats_next():
+    """
+    Create an option to the user:
+     - Either continue to choosing another event
+     - Exit the program
+    """
+    print("What would you like to do next?")
+    while True:
+        try:
+            print("Select another race?")
+            repeat = input("Type: 'Y' or 'N':  \n")
+            if repeat.upper() == "Y":
+                print("redirecting...")
+                break
+            elif repeat.upper() == "N":
+                print("Plasure, see you next time)")
+                break
+            else:
+                raise ValueError("Error: The letter is not attributed...") 
+        except ValueError as e:
+            print(e)
+
+whats_next()
 
 
 def main():
