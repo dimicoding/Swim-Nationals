@@ -22,7 +22,7 @@ def get_athlete_info():
     Gender, either "m" or "f" letter.
     """
     print("Before you choose your races, I need some details...")
-    print("Your Name, Year and Gender.\n")
+    print("Your Name, and Year of birth.\n")
 
     while True:
         #get users name and validate it
@@ -114,27 +114,29 @@ def get_quali_time():
             print("Error: Invalid gender.")
 
   
-
-    #iterate torught strokes/distances
-    row_index = -1
-    for i in range(len(strokes)):
-        if strokes[i] == user_stroke and distances[i] == user_distance:
-            row_index = i
-            if user_gender.upper() == "M":
-                time = m_times[i]
-            else:
-                time = f_times[i]
+    while True:
+        #iterate torught strokes/distances
+        row_index = -1
+        for i in range(len(strokes)):
+            if strokes[i] == user_stroke and distances[i] == user_distance:
+                row_index = i
+                if user_gender.upper() == "M":
+                    time = m_times[i]
+                else:
+                    time = f_times[i]
+                break
+            
+            # access the cell containing the time and print its value
+        if row_index >= 0:
+            cell = worksheet.cell(row_index + 1, 3 if user_gender.upper() == "M" else 4)
+            time = cell.value
+            print(f"The qualifying time for {user_distance}m")
+            print(f"{user_stroke}, gender ({user_gender}) is {time}s.") 
             break
-        
-        # access the cell containing the time and print its value
-    if row_index >= 0:
-        cell = worksheet.cell(row_index + 1, 3 if user_gender.upper() == "M" else 4)
-        time = cell.value
-        print(f"The qualifying time for {user_distance}m")
-        print(f"{user_stroke}, gender ({user_gender}) is {time}s.") 
 
-    else:
-        print("Error: Combination of stroke and distance is not valid...")
+        else:
+            print("Error: Combination of stroke and distance is not valid...")
+            return get_quali_time()
 
 
 def whats_next():
@@ -150,6 +152,7 @@ def whats_next():
             repeat = input("Type: 'Y' or 'N':  \n")
             if repeat.upper() == "Y":
                 print("redirecting...")
+                return get_quali_time()
                 break
             elif repeat.upper() == "N":
                 print("Plasure, see you next time)")
@@ -159,14 +162,15 @@ def whats_next():
         except ValueError as e:
             print(e)
 
-whats_next()
+
 
 
 def main():
     personal_info= get_athlete_info()
     races= Events()
     times= get_quali_time()
-
+    whats_next()
+main()
 
 
 """"
