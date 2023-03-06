@@ -18,6 +18,7 @@ sh = GSPREAD_CLIENT.open('Swim_Nationals')
 
 colorama.init()
 
+
 def users_name():
     """
     get the name from the input
@@ -25,18 +26,19 @@ def users_name():
     Run a while loop to collect valid data.
     Name, must be between 2 and 10letters.
     """
-    print("Before you choose your races, I need some details first:")
-    print("Your Name, and Year of birth.\n")
+    print("Before you choose your races, I need some details: ")
+    print("Let's start with your Name.\n")
 
     global name
     while True:
 
-        print("Your name should contain between 3 and 9 letters.")
+        print("Your name, should contain between 3 and 9 letters.")
         print("Example: MichaelP\n")
 
         name = input("Enter your name here:\n")
         if name.isalpha() and len(name) > 2 and len(name) < 10:
-            print("Hi! " + name + " what is the year you were born?")
+            print("")
+            print("Hi " + name + "!\n")
             break
         else:
             print("Invalid name! Please enter a valid name.")
@@ -53,12 +55,17 @@ def users_year():
     while True:
 
         try:
+            print("What is your birth year?")
             print("Type only the two last numbers.")
-            print("Example: 00\n")
+            print("Example: 91\n")
             year = input("Your year:\n")
             if year.isdigit() and len(year) == 2:
                 year = int(year)
-                print("Year valid.")
+                print("")
+                print("Good job.")
+                print("The list of swimming events available")
+                print("in the national competition is as follows.")
+                print("You may choose one event for now.\n")
                 break
             else:
                 raise ValueError
@@ -67,20 +74,20 @@ def users_year():
     return year
 
 
-def Events():
+def events():
     """
     Just prints the distances and srokes to the user in a ordered way.
     """
-    start = Back.BLUE + Fore.YELLOW + Style.BRIGHT
-    reset = Back.RESET + Fore.RESET + Style.RESET_ALL
-    events = {
+    
+    events ={
         50:  ["free", "fly", "back", "breast"],
         100: ["free", "fly", "back", "breast"],
         200: ["free", "fly", "back", "breast", "medley"],
         400: ["free", "medley"],
         800: ["free"],
         1500: ["free"],
-        }
+    }
+        
 
     pprint(events)
 
@@ -102,15 +109,16 @@ def get_quali_time():
     global user_stroke
     print("Which stroke you want to swim, for example:'medley'")
     user_stroke = input("Insert your stroke here:  \n")
+    print("")
 
     global user_distance
     while True:
         '#get users distance and validate it'
-        print("Distance of your stroke, must be a number for example:'200'")
+        print("Distance of your stroke, must be a number. Example:'200'")
         try:
             user_distance = input("Insert your distance here:  \n")
             if user_distance.isdigit() and len(user_distance) < 5:
-                print("Distance is valid!")
+                print("")
             else:
                 raise ValueError
             break
@@ -178,7 +186,7 @@ def main():
     while should_repeat:
         users_name()
         users_year()
-        Events()
+        events()
         get_quali_time()
         append_to_sheet(name, year, user_stroke, user_distance, gender)
         while True:
@@ -202,9 +210,9 @@ def main():
             except ValueError as e:
                 print(e)
 
-print("Welcome to...\n")
-print(Fore.YELLOW + Style.BRIGHT + "SWIM"
+print("\n")
+print(Fore.YELLOW + Style.BRIGHT + "                        SWIM"
 + Back.RESET + Fore.RESET + Style.RESET_ALL + "-"
-+ Fore.BLUE + Style.BRIGHT + "NATIONALS" + Fore.RESET + Style.RESET_ALL)
++ Fore.BLUE + Style.BRIGHT + "NATIONALS\n" + Fore.RESET + Style.RESET_ALL)
 
 main()
