@@ -156,10 +156,16 @@ def get_quali_time():
             cell = worksheet.cell(row_index + 1,
                    3 if gender.upper() == "M" else 4)
             time = cell.value
-            print(Back.YELLOW + Style.BRIGHT +
-            f"To qualify for {user_distance}m {user_stroke} \
-gender-({gender}) you need to swim faster than {time}s."
-            + Back.RESET + Style.RESET_ALL)
+            #colors, yellow_start/yellow_finish
+            y_s = Fore.YELLOW + Style.BRIGHT
+            y_f = Fore.RESET + Style.RESET_ALL
+            b_s = Fore.BLUE
+            b_f = Fore.RESET
+            print( y_s + f"To qualify for" + y_f + b_s + 
+f" {user_distance}m {user_stroke}, " + b_f + y_s + "gender " +
+y_f + b_s+f"({gender})" + b_f + y_s + " you need to swim faster than"
++ y_f + b_s + f" {time}s." + b_f)
+            print("")
             break
 
         else:
@@ -202,7 +208,9 @@ def main():
                     print("Redirecting...")
                     break
                 elif repeat.upper() == "N":
-                    print("Plasure, see you next time)")
+                    print("")
+                    print("Thank you for using the program.\n"
+                          "Hope to see you again soon!")
                     should_repeat = False
                     break
                 else:
