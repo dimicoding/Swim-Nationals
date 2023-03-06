@@ -1,6 +1,10 @@
 import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
+import colorama
+from colorama import Fore, Back, Style
+
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -12,28 +16,21 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 sh = GSPREAD_CLIENT.open('Swim_Nationals')
 
-
-"""
-get users name, age and gender.
-Run a while loop to collect valid data.
-Name, must be between 2 and 10letters.
-Age, last two numbers of birth the birth year.
-Gender, either "m" or "f" letter.
-"""
-
-print("Before you choose your races, I need some details...")
-print("Your Name, and Year of birth.\n")
-
+colorama.init()
 
 def users_name():
     """
     get the name from the input
+    get users name and birth year.
+    Run a while loop to collect valid data.
+    Name, must be between 2 and 10letters.
     """
+    print("Before you choose your races, I need some details first:")
+    print("Your Name, and Year of birth.\n")
+
     global name
     while True:
-        """
-        get users name and validate it
-        """
+
         print("Your name should contain between 3 and 9 letters.")
         print("Example: MichaelP\n")
 
@@ -49,12 +46,11 @@ def users_name():
 def users_year():
     """
     get the birth year from the input
+    Run a while loop to collect valid data.
+    Last two numbers of birth the birth year.
     """
     global year
     while True:
-        """
-        get users birth year and validate it
-        """
 
         try:
             print("Type only the two last numbers.")
@@ -75,6 +71,8 @@ def Events():
     """
     Just prints the distances and srokes to the user in a ordered way.
     """
+    start = Back.BLUE + Fore.YELLOW + Style.BRIGHT
+    reset = Back.RESET + Fore.RESET + Style.RESET_ALL
     events = {
         50:  ["free", "fly", "back", "breast"],
         100: ["free", "fly", "back", "breast"],
@@ -150,8 +148,10 @@ def get_quali_time():
             cell = worksheet.cell(row_index + 1,
                    3 if gender.upper() == "M" else 4)
             time = cell.value
-            print(f"To qualify for {user_distance}m {user_stroke} ({gender})")
-            print(f"you need to swim faster than {time}s.\n")
+            print(Back.YELLOW + Style.BRIGHT +
+            f"To qualify for {user_distance}m {user_stroke} \
+gender-({gender}) you need to swim faster than {time}s."
+            + Back.RESET + Style.RESET_ALL)
             break
 
         else:
@@ -202,5 +202,9 @@ def main():
             except ValueError as e:
                 print(e)
 
+print("Welcome to...\n")
+print(Fore.YELLOW + Style.BRIGHT + "SWIM"
++ Back.RESET + Fore.RESET + Style.RESET_ALL + "-"
++ Fore.BLUE + Style.BRIGHT + "NATIONALS" + Fore.RESET + Style.RESET_ALL)
 
 main()
