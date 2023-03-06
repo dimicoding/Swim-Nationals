@@ -147,7 +147,8 @@ def get_quali_time():
 
             # access the cell containing the time and print its value
         if row_index >= 0:
-            cell = worksheet.cell(row_index + 1 ,3 if gender.upper() == "M" else 4)
+            cell = worksheet.cell(row_index + 1,
+                   3 if gender.upper() == "M" else 4)
             time = cell.value
             print(f"To qualify for {user_distance}m {user_stroke} ({gender})")
             print(f"you need to swim faster than {time}s.\n")
@@ -156,29 +157,6 @@ def get_quali_time():
         else:
             print("Error: Combination of stroke and distance is not valid...")
             return get_quali_time()
-
-
-def whats_next():
-    """
-    Create an option to the user:
-     - Either continue to choosing another event
-     - Exit the program
-    """
-    print("What would you like to do next?")
-    while True:
-        try:
-            print("Select another race?")
-            repeat = input("Type: 'Y' or 'N':  \n")
-            if repeat.upper() == "Y":
-                print("redirecting...")
-                break
-            elif repeat.upper() == "N":
-                print("Plasure, see you next time)")
-                break
-            else:
-                raise ValueError("Error: The letter is not attributed...")
-        except ValueError as e:
-            print(e)
 
 
 def append_to_sheet(name, year, user_stroke, user_distance, gender):
@@ -196,17 +174,33 @@ def main():
     global user_stroke
     global user_distance
     global gender
-    while True:
+    should_repeat = True
+    while should_repeat:
         users_name()
         users_year()
         Events()
         get_quali_time()
-        whats_next()
         append_to_sheet(name, year, user_stroke, user_distance, gender)
-        repeat = input("Do you want to continue? (Y/N)")
-        if repeat.upper() == "N":
-            print("Exiting program...")
-            break
+        while True:
+            """
+            Create an option to the user:
+            - Either continue to choosing another event
+            - Exit the program
+            """
+            try:
+                print("Select another race?")
+                repeat = input("Type: (Y/N):  \n")
+                if repeat.upper() == "Y":
+                    print("Redirecting...")
+                    break
+                elif repeat.upper() == "N":
+                    print("Plasure, see you next time)")
+                    should_repeat = False
+                    break
+                else:
+                    raise ValueError("Error: The letter is not attributed...")
+            except ValueError as e:
+                print(e)
 
 
 main()
