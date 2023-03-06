@@ -7,22 +7,23 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
     ]
-CREDS= Credentials.from_service_account_file('creds.json')
-SCOPED_CREDS= CREDS.with_scopes(SCOPE)
-GSPREAD_CLIENT= gspread.authorize(SCOPED_CREDS)
-sh= GSPREAD_CLIENT.open('Swim_Nationals')
-
+CREDS = Credentials.from_service_account_file('creds.json')
+SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+sh = GSPREAD_CLIENT.open('Swim_Nationals')
 
 
 """
-    get users name, age and gender.
-    Run a while loop to collect valid data.
-    Name, must be between 2 and 10letters.
-    Age, last two numbers of birth the birth year.
-    Gender, either "m" or "f" letter.
-    """
+get users name, age and gender.
+Run a while loop to collect valid data.
+Name, must be between 2 and 10letters.
+Age, last two numbers of birth the birth year.
+Gender, either "m" or "f" letter.
+"""
+
 print("Before you choose your races, I need some details...")
 print("Your Name, and Year of birth.\n")
+
 
 def users_name():
     """
@@ -30,10 +31,12 @@ def users_name():
     """
     global name
     while True:
-    #get users name and validate it
+        """
+        get users name and validate it
+        """
         print("Your name should contain between 3 and 9 letters.")
         print("Example: MichaelP\n")
-        
+
         name = input("Enter your name here:\n")
         if name.isalpha() and len(name) > 2 and len(name) < 10:
             print("Hi! " + name + " what is the year you were born?")
@@ -41,14 +44,18 @@ def users_name():
         else:
             print("Invalid name! Please enter a valid name.")
     return name
-    
+
+
 def users_year():
     """
     get the birth year from the input
     """
     global year
     while True:
-    #get users birth year and validate it
+        """
+        get users birth year and validate it
+        """
+
         try:
             print("Type only the two last numbers.")
             print("Example: 00\n")
@@ -60,7 +67,7 @@ def users_year():
             else:
                 raise ValueError
         except ValueError:
-            print("Invalid birth year, enter a valid year")  
+            print("Invalid birth year, enter a valid year")
     return year
 
 
@@ -69,12 +76,12 @@ def Events():
     Just prints the distances and srokes to the user in a ordered way.
     """
     events = {
-        50:["free", "fly", "back", "breast"],
-        100:["free", "fly", "back", "breast"],
-        200:["free", "fly", "back", "breast", "medley"],
-        400:["free", "medley"],
-        800:["free"],
-        1500:["free"],
+        50:  ["free", "fly", "back", "breast"],
+        100: ["free", "fly", "back", "breast"],
+        200: ["free", "fly", "back", "breast", "medley"],
+        400: ["free", "medley"],
+        800: ["free"],
+        1500: ["free"],
         }
 
     pprint(events)
@@ -86,20 +93,21 @@ def get_quali_time():
     iterate trought each of them and get a time stored in a specified cell
     """
     worksheet = sh.worksheet('Events')
-    
-    #access columns in the sheet
+
+    '#access columns in the sheet'
     strokes = worksheet.col_values(1)
     distances = worksheet.col_values(2)
     m_times = worksheet.col_values(3)
     f_times = worksheet.col_values(4)
     print("")
 
+    global user_stroke
     print("Which stroke you want to swim, for example:'medley'")
     user_stroke = input("Insert your stroke here:  \n")
-    
 
+    global user_distance
     while True:
-        #get users distance and validate it
+        '#get users distance and validate it'
         print("Distance of your stroke, must be a number for example:'200'")
         try:
             user_distance = input("Insert your distance here:  \n")
@@ -111,8 +119,9 @@ def get_quali_time():
         except ValueError:
             print("Error: enter a number from 50 to 1500.")
 
+    global gender
     while True:
-        #get users gender and validate it
+        '#get users gender and validate it'
         print("Select the gender you're competing in, for example 'M' or 'F'")
         try:
             gender = input("Insert your gender here:  \n")
@@ -124,9 +133,8 @@ def get_quali_time():
         except ValueError:
             print("Error: Invalid gender.")
 
-  
     while True:
-        #iterate torught strokes/distances
+        '#iterate torught strokes/distances'
         row_index = -1
         for i in range(len(strokes)):
             if strokes[i] == user_stroke and distances[i] == user_distance:
@@ -136,10 +144,10 @@ def get_quali_time():
                 else:
                     time = f_times[i]
                 break
-            
+
             # access the cell containing the time and print its value
         if row_index >= 0:
-            cell = worksheet.cell(row_index + 1, 3 if gender.upper() == "M" else 4)
+            cell = worksheet.cell(row_index + 1 ,3 if gender.upper() == "M" else 4)
             time = cell.value
             print(f"To qualify for {user_distance}m {user_stroke} ({gender})")
             print(f"you need to swim faster than {time}s.\n")
@@ -168,90 +176,37 @@ def whats_next():
                 print("Plasure, see you next time)")
                 break
             else:
-                raise ValueError("Error: The letter is not attributed...") 
+                raise ValueError("Error: The letter is not attributed...")
         except ValueError as e:
             print(e)
 
-def append_to_sheet(name, year):
+
+def append_to_sheet(name, year, user_stroke, user_distance, gender):
     """
     Print the users stroke to the sheet
     """
     worksheet = sh.worksheet('Athlete')
-    row = [name, year]
+    row = [name, year, user_stroke, user_distance, gender]
     worksheet.append_row(row)
-
-
-
 
 
 def main():
     global name
     global year
+    global user_stroke
+    global user_distance
+    global gender
     while True:
         users_name()
         users_year()
-        races= Events()
-        times = get_quali_time()
+        Events()
+        get_quali_time()
         whats_next()
-        append_to_sheet(name,year)
+        append_to_sheet(name, year, user_stroke, user_distance, gender)
         repeat = input("Do you want to continue? (Y/N)")
         if repeat.upper() == "N":
             print("Exiting program...")
             break
+
+
 main()
-
-
-""""
-for user_stroke in strokes:
-        for user_distances in distances:
-            for user_gender in m_times:
-                time = worksheet.cell().value
-                print(time)
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-print("Finally let's choose a race")
-distance= input("Select your distance:\n")
-stroke= input("Select your stroke:\n")
-self.selected_races=[]
-
-def choose_races(self, races):
-    if races in self.events_dict:
-        self.selected_races.append(races)
-    else:
-        print("Race not Valid")
-
-
-records_data = sh.worksheet("Events").get_all_records()
-pprint(records_data)
-
-def pick_races():
-
-    #- Create a loop which will allow the user to pick the races
-    #- The choices should be printed out to the excel file
-
-    while True:
-        input()
-    
-
-worksheet = sh.worksheet('Events')
-value= worksheet.acell('C2').value
-print(value)
-"""
