@@ -5,7 +5,6 @@ import colorama
 from colorama import Fore, Back, Style
 
 
-
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -78,8 +77,8 @@ def events():
     """
     Just prints the distances and srokes to the user in a ordered way.
     """
-    
-    events ={
+
+    events = {
         50:  ["free", "fly", "back", "breast"],
         100: ["free", "fly", "back", "breast"],
         200: ["free", "fly", "back", "breast", "medley"],
@@ -87,7 +86,6 @@ def events():
         800: ["free"],
         1500: ["free"],
     }
-        
 
     pprint(events)
 
@@ -156,15 +154,18 @@ def get_quali_time():
             cell = worksheet.cell(row_index + 1,
                    3 if gender.upper() == "M" else 4)
             time = cell.value
-            #colors, yellow_start/yellow_finish
+            '#colors, yellow_start/yellow_finish'
             y_s = Fore.YELLOW + Style.BRIGHT
             y_f = Fore.RESET + Style.RESET_ALL
             b_s = Fore.BLUE
             b_f = Fore.RESET
-            print( y_s + f"To qualify for" + y_f + b_s + 
-f" {user_distance}m {user_stroke}, " + b_f + y_s + "gender " +
-y_f + b_s+f"({gender})" + b_f + y_s + " you need to swim faster than"
-+ y_f + b_s + f" {time}s." + b_f)
+            print(
+                y_s + "To qualify for" + y_f + b_s + f" {user_distance}m" +
+                f" {user_stroke}, " + b_f + y_s + "gender " +
+                y_f + b_s + f"({gender})" + b_f + y_s +
+                " you need to swim faster than" + y_f +
+                b_s + f" {time}s." + b_f
+                )
             print("")
             break
 
@@ -218,9 +219,10 @@ def main():
             except ValueError as e:
                 print(e)
 
+
 print("\n")
-print(Fore.YELLOW + Style.BRIGHT + "                        SWIM"
-+ Back.RESET + Fore.RESET + Style.RESET_ALL + "-"
-+ Fore.BLUE + Style.BRIGHT + "NATIONALS\n" + Fore.RESET + Style.RESET_ALL)
+print(Fore.YELLOW + Style.BRIGHT + "                        SWIM" +
+      Back.RESET + Fore.RESET + Style.RESET_ALL + "-" +
+      Fore.BLUE + Style.BRIGHT + "NATIONALS\n" + Fore.RESET + Style.RESET_ALL)
 
 main()
